@@ -1,0 +1,4 @@
+package modPlayground
+
+func main() {
+}
