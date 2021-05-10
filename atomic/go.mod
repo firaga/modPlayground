@@ -1,1 +1,3 @@
-module "atomic"
+module atomic
+
+go 1.13

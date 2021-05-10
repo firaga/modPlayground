@@ -5,13 +5,6 @@ import (
 	"time"
 )
 
-package main
-
-import (
-"sync/atomic"
-"time"
-)
-
 func loadConfig() map[string]string {
 	// 从数据库或者文件系统中读取配置信息，然后以map的形式存放在内存里
 	return make(map[string]string)
