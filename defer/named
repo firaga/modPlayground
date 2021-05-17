@@ -1,0 +1,42 @@
+ 0x0000 00000 (changeParam.go:9) TEXT    "".namedParam(SB), ABIInternal, $96-8
+        0x0000 00000 (changeParam.go:9) MOVQ    (TLS), CX
+        0x0009 00009 (changeParam.go:9) CMPQ    SP, 16(CX)
+        0x000d 00013 (changeParam.go:9) PCDATA  $0, $-2
+        0x000d 00013 (changeParam.go:9) JLS     130
+        0x000f 00015 (changeParam.go:9) PCDATA  $0, $-1
+        0x000f 00015 (changeParam.go:9) SUBQ    $96, SP
+        0x0013 00019 (changeParam.go:9) MOVQ    BP, 88(SP)
+        0x0018 00024 (changeParam.go:9) LEAQ    88(SP), BP
+        0x001d 00029 (changeParam.go:9) FUNCDATA        $0, gclocals·33cdeccccebe80329f1fdbee7f5874cb(SB)
+        0x001d 00029 (changeParam.go:9) FUNCDATA        $1, gclocals·33cdeccccebe80329f1fdbee7f5874cb(SB)
+        0x001d 00029 (changeParam.go:9) MOVQ    $0, "".x+104(SP)
+        0x0026 00038 (changeParam.go:10)        MOVQ    $1, "".x+104(SP)
+        0x002f 00047 (changeParam.go:11)        MOVL    $8, ""..autotmp_1+8(SP)
+        0x0037 00055 (changeParam.go:11)        LEAQ    "".namedParam.func1·f(SB), AX
+        0x003e 00062 (changeParam.go:11)        MOVQ    AX, ""..autotmp_1+32(SP)
+        0x0043 00067 (changeParam.go:11)        LEAQ    "".x+104(SP), AX
+        0x0048 00072 (changeParam.go:11)        MOVQ    AX, ""..autotmp_1+80(SP)
+        0x004d 00077 (changeParam.go:11)        LEAQ    ""..autotmp_1+8(SP), AX
+        0x0052 00082 (changeParam.go:11)        MOVQ    AX, (SP)
+        0x0056 00086 (changeParam.go:11)        PCDATA  $1, $0
+        0x0056 00086 (changeParam.go:11)        CALL    runtime.deferprocStack(SB)
+        0x005b 00091 (changeParam.go:11)        TESTL   AX, AX
+        0x005d 00093 (changeParam.go:11)        JNE     114
+        0x005f 00095 (changeParam.go:11)        NOP
+        0x0060 00096 (changeParam.go:11)        JMP     98
+        0x0062 00098 (changeParam.go:12)        XCHGL   AX, AX
+        0x0063 00099 (changeParam.go:12)        CALL    runtime.deferreturn(SB)
+        0x0068 00104 (changeParam.go:12)        MOVQ    88(SP), BP
+        0x006d 00109 (changeParam.go:12)        ADDQ    $96, SP
+        0x0071 00113 (changeParam.go:12)        RET
+        0x0072 00114 (changeParam.go:11)        XCHGL   AX, AX
+        0x0073 00115 (changeParam.go:11)        CALL    runtime.deferreturn(SB)
+        0x0078 00120 (changeParam.go:11)        MOVQ    88(SP), BP
+        0x007d 00125 (changeParam.go:11)        ADDQ    $96, SP
+        0x0081 00129 (changeParam.go:11)        RET
+        0x0082 00130 (changeParam.go:11)        NOP
+        0x0082 00130 (changeParam.go:9) PCDATA  $1, $-1
+        0x0082 00130 (changeParam.go:9) PCDATA  $0, $-2
+        0x0082 00130 (changeParam.go:9) CALL    runtime.morestack_noctxt(SB)
+        0x0087 00135 (changeParam.go:9) PCDATA  $0, $-1
+        0x0087 00135 (changeParam.go:9) JMP     0
