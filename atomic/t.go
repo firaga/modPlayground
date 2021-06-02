@@ -7,5 +7,5 @@ func main() {
 	fmt.Println(a)
 	fmt.Println(^a)
 	fmt.Printf("%b\n", a)
-	fmt.Printf("%b\n", ~5)
+	fmt.Printf("%b\n", ^5)
 }
