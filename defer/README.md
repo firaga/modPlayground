@@ -28,3 +28,12 @@ BenchmarkDeferCall-16           92463784                12.56 ns/op
    deferproc应该在defer处执行,1.16没有这个方法;
    deferreturn文章中执行了两次,1.16执行了1次.
    同时性能如上,差距不大.
+   
+
+q1. deferreturn的作用
+q2. 和panic的关系
+
+todo
+1. [深入理解defer（下）defer实现机制](https://zhuanlan.zhihu.com/p/69455275)
+2. [深入理解defer（上）defer基础](https://zhuanlan.zhihu.com/p/68702577)
+3. [Go语言panic/recover的实现](https://zhuanlan.zhihu.com/p/72779197)

@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"runtime"
 )
 
 func main() {
@@ -10,7 +9,6 @@ func main() {
 	defer fmt.Println("hello2")
 
 	fmt.Println("world")
-	runtime.Breakpoint()
 }
 
 //作者：尼不要逗了
