@@ -7,3 +7,24 @@ changeRet.go
 闭包
 foobar.go
 closure.php
+
+go run -gcflags="-S" twoDefer.go
+run.asm
+
+go build -gcflags '-l' -o defer twoDefer.go
+go tool objdump -s "main\.main" defer
+o.asm
+
+
+go test -bench=. b_test.go -run=none
+对比差距不大
+BenchmarkCall
+BenchmarkCall-16                100000000               10.79 ns/op
+BenchmarkDeferCall
+BenchmarkDeferCall-16           92463784                12.56 ns/op
+
+其他
+1. 1.16的表现和文章中不一致
+   deferproc应该在defer处执行,1.16没有这个方法;
+   deferreturn文章中执行了两次,1.16执行了1次.
+   同时性能如上,差距不大.
