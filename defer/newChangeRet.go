@@ -30,11 +30,23 @@ func f3() (r int) {
 	return 1
 }
 
+func f4() (r int) {
+	defer func() {
+		r = r + 5
+	}()
+	//r=1;
+	//r+=5;
+	//ret
+	return 1
+}
+
 func main() {
 	println(f())
 	println(f1())
 	println(f2())
 	println(f3())
+	//改f3的变量拷贝为变量引用,
+	println(f4())
 }
 
 //作者：尼不要逗了
