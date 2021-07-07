@@ -16,7 +16,7 @@ type computer struct {
 type dell struct {
 	// 匿名结构体
 	computer
-	//name string
+	//logo string
 }
 
 //如果一个struct嵌套了另外一个有名结构体，是UML中的组合或者聚合（根据实际情况来定）
@@ -62,7 +62,7 @@ func main() {
 	//showLogo(pc)
 
 	// 伪继承可以直接调用，但是不能使用父类指针指向子类对象
-	var d dell = dell{computer{logo: "dell"}}
+	var d dell = dell{computer{logo: "computer"}}
 	d.ShowLogo()
 	d.computer.ShowLogo()
 	// 组合更不能了。
