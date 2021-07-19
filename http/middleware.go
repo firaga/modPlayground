@@ -38,6 +38,17 @@ func Metric(handler http.Handler) http.Handler {
 	})
 }
 
+func MetricFunc(handler http.Handler) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		start := time.Now()
+		defer func() {
+			logger.Printf("path:%s elapsed:%fs\n", r.URL.Path, time.Since(start).Seconds())
+		}()
+		time.Sleep(1 * time.Second)
+		handler.ServeHTTP(w, r)
+	}
+}
+
 func PanicRecover(handler http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		defer func() {

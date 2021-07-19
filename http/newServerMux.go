@@ -16,12 +16,12 @@ func main() {
 	mux := http.NewServeMux()
 	mux.HandleFunc("/", index)
 	//mux.Handle("/greeting", PanicRecover(WithLogger(Metric(greeting("Welcome to go web frameworks")))))
-	//middlewares := []Middleware{
-	//	PanicRecover,
-	//	WithLogger,
-	//	Metric,
-	//}
-	mux.Handle("/greeting", applyMiddlewares(greeting("hello world"), PanicRecover, WithLogger, Metric))
+	middlewares := []Middleware{
+		PanicRecover,
+		WithLogger,
+		Metric,
+	}
+	mux.Handle("/greeting", applyMiddlewares(greeting("hello world"), middlewares...))
 
 	server := &http.Server{
 		Addr:         ":8080",
