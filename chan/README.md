@@ -1,0 +1,1 @@
+[Go语言中如何检测一个channel已经被关闭了？](https://www.zhihu.com/question/450188866/answer/1792300859)
