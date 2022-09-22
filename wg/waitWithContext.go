@@ -11,6 +11,8 @@ func main() {
 	var submitCount int32
 	// run this instead of wg.Add(1)
 	atomic.AddInt32(&submitCount, 1)
+	//var x uint32
+	//uintptr(unsafe.Pointer(&x))%unsafe.Alignof(x) == 0
 
 	// run this instead of wg.Done()
 	// atomic.AddInt32(&submitCount, -1)
