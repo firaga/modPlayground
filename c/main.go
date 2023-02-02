@@ -1,12 +1,7 @@
 // hello.go
 package main
 
-/*
-#include <stdio.h>
-static void SayHello(const char* s) {
-    puts(s);
-}
-*/
+//void SayHello(const char* s)
 import "C"
 
 func main() {
