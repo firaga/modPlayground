@@ -34,9 +34,11 @@ func waitWithCtx(ctx context.Context, counter *int32) {
 	for {
 		select {
 		case <-ctx.Done():
+			fmt.Println("done")
 			return
 		case <-ticker.C:
 			if atomic.LoadInt32(counter) == 0 {
+				fmt.Println("counter")
 				return
 			}
 		}
