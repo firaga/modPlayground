@@ -2,6 +2,7 @@ package redisLock
 
 import (
 	"context"
+	"fmt"
 	"github.com/stretchr/testify/assert"
 	"testing"
 	"time"
@@ -38,4 +39,10 @@ func TestLockFail(t *testing.T) {
 		assert.Fail(t, "pre lock lock failed")
 	}
 	assert.Equal(t, false, res)
+}
+
+func TestFloat(t *testing.T) {
+	a := 0.1
+	b := 0.2
+	fmt.Println(a + b)
 }
