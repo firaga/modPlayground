@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/wuqinqiang/easyfsm"
+	"time"
 )
 
 var (
@@ -25,6 +26,30 @@ type (
 	}
 )
 
+var (
+	_ easyfsm.EventObserver = (*NotifyExample)(nil)
+	_ easyfsm.EventHook     = (*HookExample)(nil)
+)
+
+type (
+	NotifyExample struct {
+	}
+	HookExample struct {
+	}
+)
+
+func (h HookExample) Before(opt *easyfsm.Param) {
+	fmt.Println("事件执行前")
+}
+
+func (h HookExample) After(opt easyfsm.Param, state easyfsm.State, err error) {
+	fmt.Println("事件执行后")
+}
+
+func (o NotifyExample) Receive(opt *easyfsm.Param) {
+	fmt.Println("接收到事件变动,发送消息")
+}
+
 func init() {
 	// 支付订单事件
 	entity := easyfsm.NewEventEntity(paymentOrderEventName,
@@ -36,7 +61,7 @@ func init() {
 			fmt.Printf("param:%+v\n", param)
 			// 处理核心业务
 			return paidState, nil
-		})
+		}, easyfsm.WithHook(HookExample{}), easyfsm.WithObservers(NotifyExample{}))
 
 	// 取消订单事件
 	cancelEntity := easyfsm.NewEventEntity(cancelOrderEventName,
@@ -48,7 +73,7 @@ func init() {
 			}
 			fmt.Printf("param:%+v\n", param)
 			return canceled, nil
-		})
+		}, easyfsm.WithHook(HookExample{}))
 
 	// 注册订单状态机
 	easyfsm.RegisterStateMachine(businessName,
@@ -64,31 +89,10 @@ func main() {
 	fsm := easyfsm.NewFSM(businessName, initState)
 
 	// 第二步 调用具体
-	currentState, err := fsm.Call(cancelOrderEventName,
+	currentState, err := fsm.Call(paymentOrderEventName,
 		easyfsm.WithData(orderParam{OrderNo: "wuqinqiang050@gmail.com"}))
 
-	fmt.Printf("[Success]call cancelOrderEventName err:%v\n", err)
-	fmt.Printf("[Success]call cancelOrderEventName state:%v\n", currentState)
-
-	//异常情况1，没有定义goods业务
-	fsm = easyfsm.NewFSM("goods", paidState)
-	currentState, err = fsm.Call(cancelOrderEventName,
-		easyfsm.WithData(orderParam{OrderNo: "wuqinqiang050@gmail.com"}))
-	fmt.Printf("[UnKnowBusiness]faild :%v\n", err)
-	fmt.Printf("[UnKnowBusiness]faild state:%v\n", currentState)
-
-	//异常情况1,没有定义状态:2
-	fsm = easyfsm.NewFSM(businessName, easyfsm.State(2))
-	currentState, err = fsm.Call(cancelOrderEventName,
-		easyfsm.WithData(orderParam{OrderNo: "wuqinqiang050@gmail.com"}))
-	fmt.Printf("[UnKnowState]faild :%v\n", err)
-	fmt.Printf("[UnKnowState]faild state:%v\n", currentState)
-
-	//异常情况2:没有定义状态1对应的发货事件
-	fsm = easyfsm.NewFSM(businessName, initState)
-	currentState, err = fsm.Call("shippingEvent",
-		easyfsm.WithData(orderParam{OrderNo: "wuqinqiang050@gmail.com"}))
-	fmt.Printf("[UnKnowEvent]faild :%v\n", err)
-	fmt.Printf("[UnKnowEvent]faild state:%v\n", currentState)
-
+	fmt.Printf("[Success]call paymentOrderEventName err:%v\n", err)
+	fmt.Printf("[Success]call paymentOrderEventName state:%v\n", currentState)
+	time.Sleep(2 * time.Second)
 }
