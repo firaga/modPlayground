@@ -79,6 +79,11 @@ func init() {
 	easyfsm.RegisterStateMachine(businessName,
 		initState,
 		entity, cancelEntity)
+	easyfsm.RegisterStateMachine(businessName,
+		paidState,
+		cancelEntity)
+	easyfsm.RegisterStateMachine(businessName,
+		canceled)
 }
 
 func main() {
@@ -90,6 +95,14 @@ func main() {
 
 	// 第二步 调用具体
 	currentState, err := fsm.Call(paymentOrderEventName,
+		easyfsm.WithData(orderParam{OrderNo: "wuqinqiang050@gmail.com"}))
+
+	fmt.Printf("[Success]call paymentOrderEventName err:%v\n", err)
+	fmt.Printf("[Success]call paymentOrderEventName state:%v\n", currentState)
+	time.Sleep(2 * time.Second)
+
+	// 再次支付,应失败
+	currentState, err = fsm.Call(paymentOrderEventName,
 		easyfsm.WithData(orderParam{OrderNo: "wuqinqiang050@gmail.com"}))
 
 	fmt.Printf("[Success]call paymentOrderEventName err:%v\n", err)

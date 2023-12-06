@@ -1,0 +1,1 @@
+[Go设计模式(22)-状态模式](https://mp.weixin.qq.com/s?__biz=MzUzNzAzMTc3MA==&mid=2247484593&idx=1&sn=aa183a22d8c3fbecd07bf66d0e93c5be&scene=21#wechat_redirect)
