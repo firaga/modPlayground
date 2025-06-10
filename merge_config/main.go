@@ -8,9 +8,9 @@ import (
 	"path/filepath"
 )
 
-// mergeConfigs 合并多个 YAML 配置文件，相同的键以后出现的值为准
-func mergeConfigs(filePaths []string) (map[string]interface{}, error) {
-	finalConfig := make(map[string]interface{})
+// mergeConfigs 合并多个 YAML 配置文件，保留字段顺序
+func mergeConfigs(filePaths []string) (*yaml.Node, error) {
+	var finalConfig yaml.Node
 
 	for _, filePath := range filePaths {
 		// 读取 YAML 文件内容
@@ -19,40 +19,86 @@ func mergeConfigs(filePaths []string) (map[string]interface{}, error) {
 			return nil, fmt.Errorf("failed to read file %s: %v", filePath, err)
 		}
 
-		// 解析 YAML 文件
-		var config map[string]interface{}
+		// 解析 YAML 文件为 Node
+		var config yaml.Node
 		err = yaml.Unmarshal(yamlFile, &config)
 		if err != nil {
 			return nil, fmt.Errorf("failed to unmarshal yaml from file %s: %v", filePath, err)
 		}
 
 		// 合并配置到 finalConfig
-		mergeMaps(finalConfig, config)
-	}
-
-	return finalConfig, nil
-}
-
-// mergeMaps 将 src 合并到 dst，支持嵌套结构和字段数量不一致的情况
-func mergeMaps(dst, src map[string]interface{}) {
-	for key, value := range src {
-		if srcMap, ok := value.(map[string]interface{}); ok {
-			// 如果值是 map，则递归合并
-			if dstMap, ok := dst[key].(map[string]interface{}); ok {
-				mergeMaps(dstMap, srcMap)
-			} else {
-				// 如果 dst 中不存在该键，或者该键不是 map，则直接覆盖
-				dst[key] = srcMap
-			}
-		} else {
-			// 如果不是 map，则直接覆盖
-			dst[key] = value
+		err = mergeNodes(&finalConfig, &config)
+		if err != nil {
+			return nil, fmt.Errorf("failed to merge nodes: %v", err)
 		}
 	}
+
+	return &finalConfig, nil
+}
+
+// mergeNodes 将 src 合并到 dst，支持多种节点类型
+func mergeNodes(dst, src *yaml.Node) error {
+	// 如果目标节点为空文档节点，则直接复制源节点
+	if dst.Kind == yaml.DocumentNode && len(dst.Content) == 0 {
+		*dst = *src
+		return nil
+	}
+
+	switch src.Kind {
+	case yaml.MappingNode:
+		// 源节点是映射节点（键值对）
+		if dst.Kind != yaml.MappingNode {
+			return fmt.Errorf("destination node is not a mapping node")
+		}
+
+		// 构建目标节点的键值映射
+		dstMap := make(map[string]*yaml.Node)
+		for i := 0; i < len(dst.Content); i += 2 {
+			keyNode := dst.Content[i]
+			valueNode := dst.Content[i+1]
+			if keyNode.Kind == yaml.ScalarNode {
+				dstMap[keyNode.Value] = valueNode
+			}
+		}
+
+		// 遍历源节点并合并
+		for i := 0; i < len(src.Content); i += 2 {
+			keyNode := src.Content[i]
+			valueNode := src.Content[i+1]
+
+			if keyNode.Kind == yaml.ScalarNode {
+				if existingValue, exists := dstMap[keyNode.Value]; exists {
+					// 如果目标中已存在该键，则递归合并
+					err := mergeNodes(existingValue, valueNode)
+					if err != nil {
+						return err
+					}
+				} else {
+					// 如果目标中不存在该键，则添加到目标节点
+					dst.Content = append(dst.Content, keyNode, valueNode)
+				}
+			}
+		}
+
+	case yaml.SequenceNode:
+		// 源节点是数组节点
+		if dst.Kind != yaml.SequenceNode {
+			return fmt.Errorf("destination node is not a sequence node")
+		}
+
+		// 将源节点的所有元素追加到目标节点
+		dst.Content = append(dst.Content, src.Content...)
+
+	default:
+		// 源节点是标量节点或其他类型
+		*dst = *src
+	}
+
+	return nil
 }
 
 // writeConfigToFile 将合并后的配置写入文件
-func writeConfigToFile(config map[string]interface{}, outputPath string) error {
+func writeConfigToFile(config *yaml.Node, outputPath string) error {
 	// 将配置序列化为 YAML 格式
 	yamlData, err := yaml.Marshal(config)
 	if err != nil {
