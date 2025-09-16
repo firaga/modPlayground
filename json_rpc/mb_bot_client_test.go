@@ -7,12 +7,11 @@ import (
 	"os"
 	"testing"
 
-	"github.com/davecgh/go-spew/spew"
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/zap"
 )
 
-func TestCommon(t *testing.T) {
+func TestGetTokenListWithPublicKeys(t *testing.T) {
 	logger, _ := zap.NewDevelopment()
 	baseUrl := os.Getenv("JSON_RPC_URL")
 	if baseUrl == "" {
@@ -23,32 +22,18 @@ func TestCommon(t *testing.T) {
 	params := map[string]interface{}{
 		"userId":   os.Getenv("JSON_RPC_USERID"),
 		"username": os.Getenv("JSON_RPC_USERNAME"),
+		"publicKeys": []string{
+			"3xuhHkXmw7VAs6LoNTRgN7TxaWTRfwoy53dvPdmVmpFf",
+		},
 	}
-	res, err := c.Request(context.Background(), "getCleanupPlan", params)
-	assert.Nil(t, err)
-	spew.Dump(res)
-}
-
-func TestGetTokenList(t *testing.T) {
-	logger, _ := zap.NewDevelopment()
-	baseUrl := os.Getenv("JSON_RPC_URL")
-	if baseUrl == "" {
-		t.Fatal("JSON_RPC_URL is empty")
-	}
-	InitBotClient(baseUrl, logger)
-	c := GetBotClient()
-	params := map[string]interface{}{
-		"userId":   os.Getenv("JSON_RPC_USERID"),
-		"username": os.Getenv("JSON_RPC_USERNAME"),
-	}
-	res, err := c.Request(context.Background(), "getTokenList", params)
+	res, err := c.Request(context.Background(), "getTokenListWithPublicKeys", params)
 	assert.Nil(t, err)
 	//spew.Dump(res)
 	b, _ := json.Marshal(res)
 	fmt.Println(string(b))
 }
 
-func TestGetTokenInfo(t *testing.T) {
+func TestGetTokenInfoWithPublicKey(t *testing.T) {
 	logger, _ := zap.NewDevelopment()
 	baseUrl := os.Getenv("JSON_RPC_URL")
 	if baseUrl == "" {
@@ -60,6 +45,8 @@ func TestGetTokenInfo(t *testing.T) {
 		"userId":   os.Getenv("JSON_RPC_USERID"),
 		"username": os.Getenv("JSON_RPC_USERNAME"),
 		"tokenId":  "57QjGXRHGcDQjFrHNQcFXmL5yXCPdAX2RW75DqKYjsAz",
+		//"publicKey": "3xuhHkXmw7VAs6LoNTRgN7TxaWTRfwoy53dvPdmVmpFf",
+		"publicKey": "23KZzQwjzLFnMwwJ622eJmJcWsHXPbFYRcDgXVU8EfPC",
 	}
 	res, err := c.Request(context.Background(), "getTokenInfo", params)
 	assert.Nil(t, err)
@@ -67,7 +54,7 @@ func TestGetTokenInfo(t *testing.T) {
 	b, _ := json.Marshal(res)
 	fmt.Println(string(b))
 }
-func TestGetLimitOrderList(t *testing.T) {
+func TestGetLimitOrderListWithPublicKey(t *testing.T) {
 	logger, _ := zap.NewDevelopment()
 	baseUrl := os.Getenv("JSON_RPC_URL")
 	if baseUrl == "" {
@@ -79,6 +66,10 @@ func TestGetLimitOrderList(t *testing.T) {
 		"userId":   os.Getenv("JSON_RPC_USERID"),
 		"username": os.Getenv("JSON_RPC_USERNAME"),
 		"tokenId":  "57QjGXRHGcDQjFrHNQcFXmL5yXCPdAX2RW75DqKYjsAz",
+		//"publicKeys": []string{
+		//	"3xuhHkXmw7VAs6LoNTRgN7TxaWTRfwoy53dvPdmVmpFf",
+		//},
+		//"publicKey": "3xuhHkXmw7VAs6LoNTRgN7TxaWTRfwoy53dvPdmVmpFf",
 	}
 	res, err := c.Request(context.Background(), "getLimitOrderList", params)
 	assert.Nil(t, err)
@@ -87,7 +78,7 @@ func TestGetLimitOrderList(t *testing.T) {
 	fmt.Println(string(b))
 }
 
-func TestGetSniperTasks(t *testing.T) {
+func TestGetSniperTasksWithPublicKey(t *testing.T) {
 	logger, _ := zap.NewDevelopment()
 	baseUrl := os.Getenv("JSON_RPC_URL")
 	if baseUrl == "" {
@@ -96,8 +87,9 @@ func TestGetSniperTasks(t *testing.T) {
 	InitBotClient(baseUrl, logger)
 	c := GetBotClient()
 	params := map[string]interface{}{
-		"userId":   os.Getenv("JSON_RPC_USERID"),
-		"username": os.Getenv("JSON_RPC_USERNAME"),
+		"userId":    os.Getenv("JSON_RPC_USERID"),
+		"username":  os.Getenv("JSON_RPC_USERNAME"),
+		"publicKey": "3xuhHkXmw7VAs6LoNTRgN7TxaWTRfwoy53dvPdmVmpFf",
 	}
 	res, err := c.Request(context.Background(), "getSniperTasks", params)
 	assert.Nil(t, err)
