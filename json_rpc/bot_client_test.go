@@ -105,3 +105,22 @@ func TestGetSniperTasks(t *testing.T) {
 	b, _ := json.Marshal(res)
 	fmt.Println(string(b))
 }
+
+func TestGetCopyTradingList(t *testing.T) {
+	logger, _ := zap.NewDevelopment()
+	baseUrl := os.Getenv("JSON_RPC_URL")
+	if baseUrl == "" {
+		t.Fatal("JSON_RPC_URL is empty")
+	}
+	InitBotClient(baseUrl, logger)
+	c := GetBotClient()
+	params := map[string]interface{}{
+		//"userId":   os.Getenv("JSON_RPC_USERID"),
+		"username": os.Getenv("JSON_RPC_USERNAME"),
+	}
+	res, err := c.Request(context.Background(), "getCopyTradingList", params)
+	assert.Nil(t, err)
+	//spew.Dump(res)
+	b, _ := json.Marshal(res)
+	fmt.Println(string(b))
+}

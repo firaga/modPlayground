@@ -66,9 +66,9 @@ func TestGetLimitOrderListWithPublicKey(t *testing.T) {
 		"userId":   os.Getenv("JSON_RPC_USERID"),
 		"username": os.Getenv("JSON_RPC_USERNAME"),
 		"tokenId":  "57QjGXRHGcDQjFrHNQcFXmL5yXCPdAX2RW75DqKYjsAz",
-		//"publicKeys": []string{
-		//	"3xuhHkXmw7VAs6LoNTRgN7TxaWTRfwoy53dvPdmVmpFf",
-		//},
+		"publicKeys": []string{
+			"3xuhHkXmw7VAs6LoNTRgN7TxaWTRfwoy53dvPdmVmpFf",
+		},
 		//"publicKey": "3xuhHkXmw7VAs6LoNTRgN7TxaWTRfwoy53dvPdmVmpFf",
 	}
 	res, err := c.Request(context.Background(), "getLimitOrderList", params)
