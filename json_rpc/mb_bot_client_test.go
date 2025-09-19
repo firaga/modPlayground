@@ -11,7 +11,7 @@ import (
 	"go.uber.org/zap"
 )
 
-func TestGetTokenListWithPublicKeys(t *testing.T) {
+func TestGetTokenListMultiWallet(t *testing.T) {
 	logger, _ := zap.NewDevelopment()
 	baseUrl := os.Getenv("JSON_RPC_URL")
 	if baseUrl == "" {
@@ -26,7 +26,28 @@ func TestGetTokenListWithPublicKeys(t *testing.T) {
 			"3xuhHkXmw7VAs6LoNTRgN7TxaWTRfwoy53dvPdmVmpFf",
 		},
 	}
-	res, err := c.Request(context.Background(), "getTokenListWithPublicKeys", params)
+	res, err := c.Request(context.Background(), "getTokenListMultiWallet", params)
+	assert.Nil(t, err)
+	//spew.Dump(res)
+	b, _ := json.Marshal(res)
+	fmt.Println(string(b))
+}
+
+func TestGetTokenInfoMultiWallet(t *testing.T) {
+	logger, _ := zap.NewDevelopment()
+	baseUrl := os.Getenv("JSON_RPC_URL")
+	if baseUrl == "" {
+		t.Fatal("JSON_RPC_URL is empty")
+	}
+	InitBotClient(baseUrl, logger)
+	c := GetBotClient()
+	params := map[string]interface{}{
+		"userId":   os.Getenv("JSON_RPC_USERID"),
+		"username": os.Getenv("JSON_RPC_USERNAME"),
+		"tokenId":  "4HdJVPCaomTkfEPRdNisvbRya2EauahUE45UTrC27oeg",
+		//"tokenId":  "57QjGXRHGcDQjFrHNQcFXmL5yXCPdAX2RW75DqKYjsAz",
+	}
+	res, err := c.Request(context.Background(), "getTokenInfoMultiWallet", params)
 	assert.Nil(t, err)
 	//spew.Dump(res)
 	b, _ := json.Marshal(res)
