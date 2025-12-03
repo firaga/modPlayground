@@ -1,10 +1,11 @@
-package json_rpc
+package sol
 
 import (
 	"context"
 	"encoding/json"
 	"fmt"
 	"os"
+	"solbot_client"
 	"testing"
 
 	"github.com/davecgh/go-spew/spew"
@@ -14,12 +15,9 @@ import (
 
 func TestCommon(t *testing.T) {
 	logger, _ := zap.NewDevelopment()
-	baseUrl := os.Getenv("JSON_RPC_URL")
-	if baseUrl == "" {
-		t.Fatal("JSON_RPC_URL is empty")
-	}
-	InitBotClient(baseUrl, logger)
-	c := GetBotClient()
+	baseUrl := json_rpc.GetConfig().Url
+	json_rpc.InitBotClient(baseUrl, logger)
+	c := json_rpc.GetBotClient()
 	params := map[string]interface{}{
 		"userId":   os.Getenv("JSON_RPC_USERID"),
 		"username": os.Getenv("JSON_RPC_USERNAME"),
@@ -31,12 +29,9 @@ func TestCommon(t *testing.T) {
 
 func TestGetTokenList(t *testing.T) {
 	logger, _ := zap.NewDevelopment()
-	baseUrl := os.Getenv("JSON_RPC_URL")
-	if baseUrl == "" {
-		t.Fatal("JSON_RPC_URL is empty")
-	}
-	InitBotClient(baseUrl, logger)
-	c := GetBotClient()
+	baseUrl := json_rpc.GetConfig().Url
+	json_rpc.InitBotClient(baseUrl, logger)
+	c := json_rpc.GetBotClient()
 	params := map[string]interface{}{
 		"userId":   os.Getenv("JSON_RPC_USERID"),
 		"username": os.Getenv("JSON_RPC_USERNAME"),
@@ -50,16 +45,13 @@ func TestGetTokenList(t *testing.T) {
 
 func TestGetTokenInfo(t *testing.T) {
 	logger, _ := zap.NewDevelopment()
-	baseUrl := os.Getenv("JSON_RPC_URL")
-	if baseUrl == "" {
-		t.Fatal("JSON_RPC_URL is empty")
-	}
-	InitBotClient(baseUrl, logger)
-	c := GetBotClient()
+	baseUrl := json_rpc.GetConfig().Url
+	json_rpc.InitBotClient(baseUrl, logger)
+	c := json_rpc.GetBotClient()
 	params := map[string]interface{}{
 		"userId":   os.Getenv("JSON_RPC_USERID"),
 		"username": os.Getenv("JSON_RPC_USERNAME"),
-		"tokenId":  "57QjGXRHGcDQjFrHNQcFXmL5yXCPdAX2RW75DqKYjsAz",
+		"tokenId":  json_rpc.GetConfig().Token,
 	}
 	res, err := c.Request(context.Background(), "getTokenInfo", params)
 	assert.Nil(t, err)
@@ -69,16 +61,12 @@ func TestGetTokenInfo(t *testing.T) {
 }
 func TestGetLimitOrderList(t *testing.T) {
 	logger, _ := zap.NewDevelopment()
-	baseUrl := os.Getenv("JSON_RPC_URL")
-	if baseUrl == "" {
-		t.Fatal("JSON_RPC_URL is empty")
-	}
-	InitBotClient(baseUrl, logger)
-	c := GetBotClient()
+	baseUrl := json_rpc.GetConfig().Url
+	json_rpc.InitBotClient(baseUrl, logger)
+	c := json_rpc.GetBotClient()
 	params := map[string]interface{}{
-		"userId":   os.Getenv("JSON_RPC_USERID"),
-		"username": os.Getenv("JSON_RPC_USERNAME"),
-		"tokenId":  "57QjGXRHGcDQjFrHNQcFXmL5yXCPdAX2RW75DqKYjsAz",
+		"userId": "",
+		//"username": os.Getenv("JSON_RPC_USERNAME"),
 	}
 	res, err := c.Request(context.Background(), "getLimitOrderList", params)
 	assert.Nil(t, err)
@@ -89,12 +77,9 @@ func TestGetLimitOrderList(t *testing.T) {
 
 func TestGetSniperTasks(t *testing.T) {
 	logger, _ := zap.NewDevelopment()
-	baseUrl := os.Getenv("JSON_RPC_URL")
-	if baseUrl == "" {
-		t.Fatal("JSON_RPC_URL is empty")
-	}
-	InitBotClient(baseUrl, logger)
-	c := GetBotClient()
+	baseUrl := json_rpc.GetConfig().Url
+	json_rpc.InitBotClient(baseUrl, logger)
+	c := json_rpc.GetBotClient()
 	params := map[string]interface{}{
 		"userId":   os.Getenv("JSON_RPC_USERID"),
 		"username": os.Getenv("JSON_RPC_USERNAME"),
@@ -108,17 +93,32 @@ func TestGetSniperTasks(t *testing.T) {
 
 func TestGetCopyTradingList(t *testing.T) {
 	logger, _ := zap.NewDevelopment()
-	baseUrl := os.Getenv("JSON_RPC_URL")
-	if baseUrl == "" {
-		t.Fatal("JSON_RPC_URL is empty")
-	}
-	InitBotClient(baseUrl, logger)
-	c := GetBotClient()
+	baseUrl := json_rpc.GetConfig().Url
+	json_rpc.InitBotClient(baseUrl, logger)
+	c := json_rpc.GetBotClient()
 	params := map[string]interface{}{
 		//"userId":   os.Getenv("JSON_RPC_USERID"),
 		"username": os.Getenv("JSON_RPC_USERNAME"),
 	}
 	res, err := c.Request(context.Background(), "getCopyTradingList", params)
+	assert.Nil(t, err)
+	spew.Dump(res)
+}
+
+func TestListTradesSummaryHandler(t *testing.T) {
+	logger, _ := zap.NewDevelopment()
+	baseUrl := json_rpc.GetConfig().Url
+	json_rpc.InitBotClient(baseUrl, logger)
+	c := json_rpc.GetBotClient()
+	params := map[string]interface{}{
+		//"userId":   os.Getenv("JSON_RPC_USERID"),
+		"username": os.Getenv("JSON_RPC_USERNAME"),
+		"address":  json_rpc.GetConfig().Address,
+		"day":      7,
+		"page":     1,
+		"pageSize": 10,
+	}
+	res, err := c.Request(context.Background(), "listTradesSummary", params)
 	assert.Nil(t, err)
 	//spew.Dump(res)
 	b, _ := json.Marshal(res)

@@ -1,10 +1,11 @@
-package json_rpc
+package sol
 
 import (
 	"context"
 	"encoding/json"
 	"fmt"
 	"os"
+	"solbot_client"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -13,20 +14,15 @@ import (
 
 func TestGetTokenListMultiWallet(t *testing.T) {
 	logger, _ := zap.NewDevelopment()
-	baseUrl := os.Getenv("JSON_RPC_URL")
-	if baseUrl == "" {
-		t.Fatal("JSON_RPC_URL is empty")
-	}
-	InitBotClient(baseUrl, logger)
-	c := GetBotClient()
+	baseUrl := json_rpc.GetConfig().Url
+	json_rpc.InitBotClient(baseUrl, logger)
+	c := json_rpc.GetBotClient()
 	params := map[string]interface{}{
 		"userId":   os.Getenv("JSON_RPC_USERID"),
 		"username": os.Getenv("JSON_RPC_USERNAME"),
-		"publicKeys": []string{
-			"3xuhHkXmw7VAs6LoNTRgN7TxaWTRfwoy53dvPdmVmpFf",
-		},
+		"address":  json_rpc.GetConfig().Address,
 	}
-	res, err := c.Request(context.Background(), "getTokenListMultiWallet", params)
+	res, err := c.Request(context.Background(), "upsertCopyTrading", params)
 	assert.Nil(t, err)
 	//spew.Dump(res)
 	b, _ := json.Marshal(res)
@@ -35,17 +31,13 @@ func TestGetTokenListMultiWallet(t *testing.T) {
 
 func TestGetTokenInfoMultiWallet(t *testing.T) {
 	logger, _ := zap.NewDevelopment()
-	baseUrl := os.Getenv("JSON_RPC_URL")
-	if baseUrl == "" {
-		t.Fatal("JSON_RPC_URL is empty")
-	}
-	InitBotClient(baseUrl, logger)
-	c := GetBotClient()
+	baseUrl := json_rpc.GetConfig().Url
+	json_rpc.InitBotClient(baseUrl, logger)
+	c := json_rpc.GetBotClient()
 	params := map[string]interface{}{
 		"userId":   os.Getenv("JSON_RPC_USERID"),
 		"username": os.Getenv("JSON_RPC_USERNAME"),
-		"tokenId":  "4HdJVPCaomTkfEPRdNisvbRya2EauahUE45UTrC27oeg",
-		//"tokenId":  "57QjGXRHGcDQjFrHNQcFXmL5yXCPdAX2RW75DqKYjsAz",
+		"tokenId":  json_rpc.GetConfig().Token,
 	}
 	res, err := c.Request(context.Background(), "getTokenInfoMultiWallet", params)
 	assert.Nil(t, err)
@@ -56,18 +48,14 @@ func TestGetTokenInfoMultiWallet(t *testing.T) {
 
 func TestGetTokenInfoWithPublicKey(t *testing.T) {
 	logger, _ := zap.NewDevelopment()
-	baseUrl := os.Getenv("JSON_RPC_URL")
-	if baseUrl == "" {
-		t.Fatal("JSON_RPC_URL is empty")
-	}
-	InitBotClient(baseUrl, logger)
-	c := GetBotClient()
+	baseUrl := json_rpc.GetConfig().Url
+	json_rpc.InitBotClient(baseUrl, logger)
+	c := json_rpc.GetBotClient()
 	params := map[string]interface{}{
-		"userId":   os.Getenv("JSON_RPC_USERID"),
-		"username": os.Getenv("JSON_RPC_USERNAME"),
-		"tokenId":  "57QjGXRHGcDQjFrHNQcFXmL5yXCPdAX2RW75DqKYjsAz",
-		//"publicKey": "3xuhHkXmw7VAs6LoNTRgN7TxaWTRfwoy53dvPdmVmpFf",
-		"publicKey": "23KZzQwjzLFnMwwJ622eJmJcWsHXPbFYRcDgXVU8EfPC",
+		"userId":    os.Getenv("JSON_RPC_USERID"),
+		"username":  os.Getenv("JSON_RPC_USERNAME"),
+		"tokenId":   json_rpc.GetConfig().Token,
+		"publicKey": json_rpc.GetConfig().Address,
 	}
 	res, err := c.Request(context.Background(), "getTokenInfo", params)
 	assert.Nil(t, err)
@@ -77,20 +65,16 @@ func TestGetTokenInfoWithPublicKey(t *testing.T) {
 }
 func TestGetLimitOrderListWithPublicKey(t *testing.T) {
 	logger, _ := zap.NewDevelopment()
-	baseUrl := os.Getenv("JSON_RPC_URL")
-	if baseUrl == "" {
-		t.Fatal("JSON_RPC_URL is empty")
-	}
-	InitBotClient(baseUrl, logger)
-	c := GetBotClient()
+	baseUrl := json_rpc.GetConfig().Url
+	json_rpc.InitBotClient(baseUrl, logger)
+	c := json_rpc.GetBotClient()
 	params := map[string]interface{}{
 		"userId":   os.Getenv("JSON_RPC_USERID"),
 		"username": os.Getenv("JSON_RPC_USERNAME"),
-		"tokenId":  "57QjGXRHGcDQjFrHNQcFXmL5yXCPdAX2RW75DqKYjsAz",
+		"tokenId":  "",
 		"publicKeys": []string{
-			"3xuhHkXmw7VAs6LoNTRgN7TxaWTRfwoy53dvPdmVmpFf",
+			"",
 		},
-		//"publicKey": "3xuhHkXmw7VAs6LoNTRgN7TxaWTRfwoy53dvPdmVmpFf",
 	}
 	res, err := c.Request(context.Background(), "getLimitOrderList", params)
 	assert.Nil(t, err)
@@ -101,16 +85,13 @@ func TestGetLimitOrderListWithPublicKey(t *testing.T) {
 
 func TestGetSniperTasksWithPublicKey(t *testing.T) {
 	logger, _ := zap.NewDevelopment()
-	baseUrl := os.Getenv("JSON_RPC_URL")
-	if baseUrl == "" {
-		t.Fatal("JSON_RPC_URL is empty")
-	}
-	InitBotClient(baseUrl, logger)
-	c := GetBotClient()
+	baseUrl := json_rpc.GetConfig().Url
+	json_rpc.InitBotClient(baseUrl, logger)
+	c := json_rpc.GetBotClient()
 	params := map[string]interface{}{
 		"userId":    os.Getenv("JSON_RPC_USERID"),
 		"username":  os.Getenv("JSON_RPC_USERNAME"),
-		"publicKey": "3xuhHkXmw7VAs6LoNTRgN7TxaWTRfwoy53dvPdmVmpFf",
+		"publicKey": "",
 	}
 	res, err := c.Request(context.Background(), "getSniperTasks", params)
 	assert.Nil(t, err)
